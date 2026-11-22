@@ -1,0 +1,393 @@
+  /* ==========================================================================
+     DIGI — shared front-page styles for the three sections.
+     Every page sets data-section on <html>; the section decides the accent.
+     Neutrals, type and layout are shared, so the three read as one family.
+     ========================================================================== */
+  :root{
+    --canvas:#FCFCFB; --paper:#FFFFFF; --ink:#15171C; --muted:#5F636B;
+    /* --faint was #9AA0A6 (2.6:1 on the canvas) until 19 Oct 2026; darkened to
+       pass 4.5:1 for the dates, counts, kickers and footers it sets at 11-12px */
+    --faint:#6E737B; --hair:#E6E6E2;
+    /* the one borrowed token: Digi Puzzles' marigold active cell. On News it
+       appears nowhere else, so a puzzle tile is the only thing that glows. */
+    --play:#FFD54A;
+    --display:'Archivo','Helvetica Neue',Arial,sans-serif;
+    --body:'Inter','Helvetica Neue',Arial,sans-serif;
+    /* section accents (text-safe on white: all >= 4.5:1) */
+    --news:#1C46C2;    --news-soft:#ECF0FC;
+    --puzzles:#0E7A4B; --puzzles-soft:#E4F4EB;
+    --games:#6A2BC9;   --games-soft:#F1EAFC;
+    --lab:#C2185B;     --lab-soft:#FCE7EF;
+    --accent:var(--news); --accent-soft:var(--news-soft);
+    --mono-bg:var(--accent); --mono-ink:#fff;
+    /* text on the ink and accent fills, the puzzle-tile previews, the loading
+       shimmer and warnings: tokens so dark mode can swap them */
+    --on-ink:#fff; --on-accent:#fff; --skel:#F2F2EF; --bad:#B3261E;
+    --tile-frame:var(--ink); --tile-cell:var(--paper); --tile-lock:var(--news-soft);
+    /* played marks on puzzle cards (21 Oct 2026): ink on the marigold dot, and
+       the "In progress" words (5.9:1 on the canvas; the marigold itself on dark) */
+    --on-play:#15171C; --started-ink:#7A5A00;
+  }
+  /* Dark mode (18 Oct 2026): follows the phone, like the puzzle players, so
+     moving between the front pages and a puzzle doesn't flash light and dark.
+     The canvas is the players' own dark (#11131A). Accents are lifted to stay
+     readable on it (each >= 4.5:1 on the canvas and on its soft wash). */
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --canvas:#11131A; --paper:#1B1E29; --ink:#ECEEF4; --muted:#A6ABBD; --faint:#80869A; --hair:#2E3344;
+    --news:#8EA6FF;    --news-soft:#1C2440;
+    --puzzles:#4CC793; --puzzles-soft:#142C24;
+    --games:#B794FF;   --games-soft:#2A2043;
+    --lab:#FF7FAE;     --lab-soft:#3A1A29;
+    --mono-ink:#11131A; --on-ink:#11131A; --on-accent:#0B0D12; --skel:#1F2330; --bad:#FF7A6E;
+    --tile-frame:#050608; --tile-cell:#2E3344; --tile-lock:#3A4466;
+    --started-ink:#FFD54A;
+    color-scheme:dark}}
+  :root[data-theme="dark"]{
+    --canvas:#11131A; --paper:#1B1E29; --ink:#ECEEF4; --muted:#A6ABBD; --faint:#80869A; --hair:#2E3344;
+    --news:#8EA6FF;    --news-soft:#1C2440;
+    --puzzles:#4CC793; --puzzles-soft:#142C24;
+    --games:#B794FF;   --games-soft:#2A2043;
+    --lab:#FF7FAE;     --lab-soft:#3A1A29;
+    --mono-ink:#11131A; --on-ink:#11131A; --on-accent:#0B0D12; --skel:#1F2330; --bad:#FF7A6E;
+    --tile-frame:#050608; --tile-cell:#2E3344; --tile-lock:#3A4466;
+    --started-ink:#FFD54A;
+    color-scheme:dark}
+  html[data-section="puzzles"]{--accent:var(--puzzles);--accent-soft:var(--puzzles-soft)}
+  html[data-section="games"]{--accent:var(--games);--accent-soft:var(--games-soft)}
+  html[data-section="lab"]{--accent:var(--lab);--accent-soft:var(--lab-soft)}
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--canvas);color:var(--ink);font-family:var(--body);
+    line-height:1.6;-webkit-font-smoothing:antialiased;font-size:17px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px 72px}
+  @media(min-width:560px){.wrap{padding:0 20px 72px}}
+  /* Full-screen app on phones with a camera cutout: the page is drawn under
+     it (viewport-fit=cover on each front page) and content keeps clear. */
+  html{background:var(--canvas)}
+  .wrap{padding-top:var(--dn-top,env(safe-area-inset-top,0px));
+    padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+    padding-bottom:calc(72px + var(--dn-bot,env(safe-area-inset-bottom,0px)))}
+  @media(min-width:560px){.wrap{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}}
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+  /* ---------- masthead ---------- */
+  .mast{display:flex;align-items:center;gap:11px;padding:14px 0 10px;border-bottom:2px solid var(--ink)}
+  .mono{width:30px;height:30px;background:var(--mono-bg);color:var(--mono-ink);font-family:var(--display);
+    font-weight:800;font-size:17px;display:grid;place-content:center;border-radius:4px;letter-spacing:-1px}
+  /* The noodle n (7 Nov 2026): the app's mark drawn in the tile's ink, its marigold dot ringed in the same ink. */
+  .mono .noodle{display:block;width:18px;height:23px}
+  .word{font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.02em}
+  .word b{color:var(--accent)}
+  .mast .kick{margin-left:auto;font-weight:600;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--faint);text-align:right;line-height:1.5}
+  .mast .kick .k2{display:block}
+  /* phones: one kicker line, so the masthead is one row tall */
+  @media(max-width:479px){.mast .kick .k2{display:none}}
+  .mast .kick:has(#kickdate){text-align:right}
+  .mast .kick #kickdate{display:block}   /* Today's date on its own line, as the app (7 Nov 2026) */
+
+  /* ---------- controls ---------- */
+  .controls{position:sticky;top:0;z-index:20;background:var(--canvas);
+    border-bottom:1px solid var(--hair);padding:10px 0 8px;margin-bottom:4px}
+  /* section switcher: one pill per desk, each carrying its own colour dot */
+  .bar{display:flex;align-items:center;gap:6px}
+  .sections{display:flex;gap:5px;min-width:0}
+  .sec{display:inline-flex;align-items:center;gap:6px;font-family:var(--display);font-weight:700;
+    font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;padding:6px 11px;
+    border:1px solid var(--hair);background:var(--paper);color:var(--muted);border-radius:999px}
+  .sec::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--dot)}
+  .sec.news{--dot:var(--news)} .sec.puzzles{--dot:var(--puzzles)} .sec.games{--dot:var(--games)} .sec.lab{--dot:var(--lab)}
+  /* four pills (News, Puzzles, Games, Lab) on one row down to 320px */
+  @media(max-width:399px){.sections{gap:4px}.sec{padding:6px 9px;gap:5px;letter-spacing:.05em}}
+  @media(max-width:345px){.sec{font-size:10.5px;padding:6px 7px;gap:4px}}
+  .sec[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
+  .sec:not([aria-current]):hover{border-color:var(--ink);color:var(--ink)}
+  /* search: an icon at the end of the section row; tapping it opens the field
+     underneath. The field stays open while it holds a query. */
+  .sbtn{margin-left:auto;flex:none;width:34px;height:34px;display:grid;place-content:center;
+    border:1px solid var(--hair);background:var(--paper);color:var(--muted);border-radius:999px;cursor:pointer}
+  .sbtn[hidden]{display:none}   /* search parked for now: remove `hidden` on the button to bring it back */
+  .sbtn svg{width:16px;height:16px;display:block}
+  .sbtn[aria-expanded="true"]{background:var(--ink);border-color:var(--ink);color:var(--on-ink)}
+  .searchrow{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .searchrow[hidden]{display:none}
+  .search{flex:1;font-family:var(--body);font-size:15px;padding:9px 12px;border:1px solid var(--hair);
+    border-radius:6px;background:var(--paper);color:var(--ink)}
+  .search::placeholder{color:var(--faint)}
+  .chips{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chips[hidden]{display:none}
+  .chip{white-space:nowrap;font-weight:600;font-size:12.5px;padding:6px 12px;border:1px solid var(--hair);
+    background:var(--paper);color:var(--muted);border-radius:999px;cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+  .count{font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--faint);padding:8px 0 0}
+  /* Puzzles: your run as a chip on the count row (19 Oct 2026). Celebration
+     only: no "play today" nudge (Alec). */
+  .countrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:8px 0 0}
+  .countrow .count{padding:0}
+  .run{display:inline-flex;align-items:center;gap:5px;margin:0;padding:4px 10px 4px 8px;
+    font-size:12.5px;font-weight:600;line-height:1.3;color:var(--accent);
+    background:var(--accent-soft);border:1px solid transparent;border-radius:999px}
+  .run b{color:inherit;font-weight:800}
+  .run[hidden]{display:none}
+
+  /* ---------- cards ---------- */
+  .feed{list-style:none}
+  /* Cards below the screen are laid out only as they come near it. Puzzles
+     lists every puzzle (500 and growing); without this, a tap on a topic
+     froze a mid-range phone for about 2 s (19 Oct 2026, measured at 6x CPU
+     slowdown: 2.4 s down to 0.8 s). The size is a placeholder until a card
+     has been drawn once; front.js restores your place by card, not pixels. */
+  .feed>li{content-visibility:auto;contain-intrinsic-size:auto 150px}
+  /* the daily briefing at the top of News (24 Oct 2026) */
+  .feed>li.brief{content-visibility:visible;margin:14px 0 6px;padding:16px 16px 14px;background:var(--paper);
+    border:1px solid var(--hair);border-left:4px solid var(--accent);border-radius:10px}
+  .brief-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;color:inherit;text-decoration:none}
+  .brief-k{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.01em;color:var(--ink)}
+  .brief-d{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .brief-list{list-style:none;margin-top:8px;counter-reset:b}
+  .brief-list li{counter-increment:b;border-top:1px solid var(--hair)}
+  .brief-list li:first-child{border-top:0}
+  .brief-list a{display:grid;grid-template-columns:22px 1fr;column-gap:6px;padding:9px 0;color:var(--ink);text-decoration:none;
+    font-weight:600;font-size:15.5px;line-height:1.35}
+  .brief-list a::before{content:counter(b);grid-row:1 / span 2;font-family:var(--display);font-weight:800;color:var(--accent)}
+  .brief-t{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .brief-all{display:inline-block;margin-top:6px;font-weight:700;font-size:14px;color:var(--accent);text-decoration:none}
+  .brief a:hover .brief-k,.brief-list a:hover{text-decoration:underline}
+  .card{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:start;
+    padding:18px 0;border-bottom:1px solid var(--hair)}
+  .card.nothumb{grid-template-columns:1fr}
+  .card:hover .hl{color:var(--accent)}
+  /* Tiles are square and top-aligned: a three-line headline must not stretch
+     the tile next to it, or the column stops reading as a column. */
+  .thumb{width:96px;aspect-ratio:1;align-self:start;background:var(--accent-soft);
+    border:1px solid var(--hair);border-radius:6px;object-fit:cover;display:block}
+  .glyph{display:grid;place-content:center;font-family:var(--display);font-weight:800;
+    font-size:11px;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
+
+  /* stat tile: the piece's first hero stat — measured figures only, per §3.
+     The figure is fitted to the box by its own length (cqw off the tile's own
+     width, stepped by data-len), the unit is demoted, and the label carries the
+     noun — so the tile states a fact rather than floating a number. */
+  .stat{container-type:inline-size;position:relative;display:grid;place-content:center;
+    text-align:center;padding:4px;background:var(--accent-soft);border-color:transparent;
+    border-radius:10px}
+  /* Was white with a 1px ink outline, which drew a hard box round the number.
+     A soft accent wash with no outline lets the figure carry the tile.
+     Contrast on each section's wash: accent >= 4.56:1, label/unit >= 5.11:1. */
+  .stat .fig{display:flex;align-items:baseline;justify-content:center;
+    font-family:var(--display);font-weight:800;color:var(--accent);
+    letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+  .stat[data-len="1"] .fig{font-size:50cqw}
+  .stat[data-len="2"] .fig{font-size:42cqw}
+  .stat[data-len="3"] .fig{font-size:32cqw}
+  .stat[data-len="4"] .fig{font-size:26cqw}
+  .stat[data-len="5"] .fig{font-size:21cqw}
+  .stat[data-len="6"] .fig{font-size:17cqw}
+  .stat .unit{font-size:.42em;font-weight:700;color:var(--muted);
+    letter-spacing:0;margin-left:.05em}
+  .stat.haslabel .fig{margin-top:-8cqw}
+  /* --muted, not --faint: 6.03:1 on the tile against --faint's 2.64:1, which
+     failed WCAG AA outright. Sized off the tile but floored in px — at 7.5cqw
+     this set at 7.2px on a phone, which no contrast ratio can rescue. */
+  .stat .lab{position:absolute;left:0;right:0;bottom:7cqw;padding:0 5px;
+    font-family:var(--display);font-weight:600;font-size:min(10.5cqw,11px);
+    letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Container queries are Safari 16+ / Chrome 105+. Older browsers get the
+     same tile at fixed sizes off the 96px box rather than a 1em numeral. */
+  @supports not (container-type:inline-size){
+    .stat[data-len="1"] .fig{font-size:48px}
+    .stat[data-len="2"] .fig{font-size:40px}
+    .stat[data-len="3"] .fig{font-size:31px}
+    .stat[data-len="4"] .fig{font-size:25px}
+    .stat[data-len="5"] .fig{font-size:20px}
+    .stat[data-len="6"] .fig{font-size:16px}
+    .stat.haslabel .fig{margin-top:-8px}
+    .stat .lab{font-size:10px;bottom:7px}
+  }
+
+  /* puzzle tile: a preview of the piece's own grid, built from feed.json's
+     mask. Blocks read as a Mini, pre-locked cells as a Doku, a bare 4x4 of
+     chips as a Link — so the types
+     are told apart from the feed without reading a word. */
+  .puzzle{background:var(--tile-frame);border-color:var(--tile-frame);padding:9px}
+  .pgrid{width:100%;height:100%;display:grid;gap:1.5px;background:var(--tile-frame);
+    grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(5,1fr);
+    outline:1.5px solid var(--tile-frame)}
+  .pgrid.six{grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(6,1fr)}
+  /* Link: sixteen loose chips, no blocks, no locks, no start square */
+  .pgrid.four{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:2.5px}
+  .pgrid i{background:var(--tile-cell);display:block}
+  .pgrid i.b{background:var(--tile-frame)}
+  .pgrid i.l{background:var(--tile-lock)}
+  .pgrid i.a{background:var(--play)}
+  .hl{font-family:var(--display);font-weight:700;font-size:19px;line-height:1.22;letter-spacing:-.01em}
+  .sf{font-size:14px;color:var(--muted);margin-top:7px;line-height:1.45;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .meta{margin-top:9px;font-size:12px;font-weight:600;color:var(--faint);
+    display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+  .meta .t{color:var(--accent);text-transform:uppercase;letter-spacing:.06em;font-size:11.5px}
+  .meta .dot{color:var(--hair)}
+  /* Lab mixes all three desks, so each card's topic and fallback tile take
+     that desk's colour rather than the page accent. */
+  html[data-section="lab"] li[data-kind="report"]{--accent:var(--news);--accent-soft:var(--news-soft)}
+  html[data-section="lab"] li[data-kind="puzzle"]{--accent:var(--puzzles);--accent-soft:var(--puzzles-soft)}
+  html[data-section="lab"] li[data-kind="game"]{--accent:var(--games);--accent-soft:var(--games-soft)}
+  /* puzzle icons carry their own edge: no tile behind them (SITE.md › Puzzle card icons) */
+  .puzzle-card img.thumb{border:0;border-radius:0;background:none}
+  .thumbwrap{position:relative;width:96px;align-self:start}
+  .thumbwrap .thumb{display:block}
+  .badge{position:absolute;left:5px;right:5px;bottom:5px;text-align:center;background:rgba(20,22,26,.82);color:#fff;
+    font-size:10px;font-weight:700;letter-spacing:.01em;line-height:1;padding:4px 2px;border-radius:4px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kindtag{border:1px solid var(--hair);border-radius:3px;padding:1px 5px;font-size:10.5px;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  @media(min-width:560px){.hl{font-size:21px}.card{grid-template-columns:120px 1fr;gap:18px}.thumb,.thumbwrap{width:120px}.badge{font-size:11px}}
+
+  /* ---------- states ---------- */
+  .note{background:var(--paper);border:1px solid var(--hair);border-left:3px solid var(--accent);
+    border-radius:4px;padding:12px 14px;font-size:13px;color:var(--muted);margin:16px 0}
+  .note b{color:var(--ink)}
+  .note .retry{display:inline-block;margin-left:4px;font:600 13px/1 var(--body);color:var(--accent);
+    background:var(--paper);border:1px solid var(--accent);border-radius:999px;padding:7px 14px;cursor:pointer}
+  .skel{height:96px;border-bottom:1px solid var(--hair);margin:0;
+    background:linear-gradient(90deg,var(--canvas),var(--skel),var(--canvas));
+    background-size:200% 100%;animation:sh 1.2s linear infinite}
+  @keyframes sh{to{background-position:-200% 0}}
+  .empty{padding:40px 0;color:var(--muted);font-size:15px;text-align:center}
+
+  /* ---------- footer ---------- */
+  .foot{margin-top:34px;padding-top:18px;border-top:1px solid var(--hair);
+    font-size:12px;color:var(--faint);line-height:1.6}
+  .foot b{color:var(--muted)}
+  .foot .privacy{margin-top:8px}
+  .foot .privacy a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+  .optout{font:inherit;color:var(--muted);background:none;border:0;padding:0;cursor:pointer;
+    text-decoration:underline;text-underline-offset:2px}
+  .optout:disabled{cursor:default;text-decoration:none}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* phones: no page scrollbar drawn (they scroll by touch; Android flashed one as a page settled or came back) */
+  @media(pointer:coarse){html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}}
+
+/* Puzzle guides: replace the category, preserving the date and duration.
+   The guide is a sibling of the play link, with its own reserved tap area. */
+.puzzle-card{position:relative}
+.puzzle-card .meta{padding-right:88px;min-height:24px;align-items:center}
+.card-guide{position:absolute;right:0;bottom:18px;min-height:24px;display:inline-flex;align-items:center;
+  padding:2px 0 2px 8px;font-size:12px;font-weight:600;line-height:1.6;color:var(--muted)}
+.card-guide:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* Played marks (21 Oct 2026, mock A): added by front.js showPlayed from the
+   players' own saves. A tick on the tile's top-right corner for a finished
+   puzzle, a marigold dot for a round started and not finished; the date line
+   swaps the duration for the result. Positioned on the card (li.puzzle-card),
+   so the tile markup is untouched. */
+.played-mark{position:absolute;top:11px;left:77px;z-index:1;width:26px;height:26px;box-sizing:border-box;
+  border-radius:50%;background:var(--accent);color:var(--on-accent);border:2.5px solid var(--canvas);
+  display:grid;place-content:center;pointer-events:none}
+.played-mark.started{background:var(--play);color:var(--on-play)}
+/* gold star (21 Nov 2026): the gold coin in the tick's ring, a touch larger; the result words stay green, the coin says gold */
+.played-mark.gold{width:28px;height:28px;top:10px;left:76px;background:none}
+@media(min-width:560px){.played-mark.gold{left:100px}}
+.played-mark svg{display:block}
+.card-result.done{color:var(--accent);font-weight:700}
+.card-result .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.card-result.lost{color:var(--muted)}   /* a lost Sweep or Link: played, not a win */
+.card-result.started{color:var(--started-ink);font-weight:700}
+@media(min-width:560px){.played-mark{left:101px}}
+
+/* Tap targets of at least 44 px (7 Nov 2026, as the app's tests enforce). The look is
+   unchanged: an invisible layer widens what a finger can hit. The section pills and the
+   card's How to play reach 44 px tall; footer links get the same height around their text.
+   The Puzzles filter chips are left as they are: they sit in a scrolling row that would
+   clip the layer, and they are due to go when the Puzzles nav arrives. */
+.sec{position:relative}
+.sec::after{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+.card-guide::before{content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+.foot .privacy a,.foot .optout{position:relative}
+.foot .privacy a::after,.foot .optout::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:44px;transform:translateY(-50%)}
+
+/* The puzzles nav (7 Nov 2026, Alec: the website takes the app's tabs): Today · Leagues · Archive
+   (· Stats) · Account on puzzles, board, archive and stats. Phones: a bar fixed to the bottom, clear
+   of the home indicator, every label shown, the current tab in the accent (icon) and ink (label),
+   no animation. From 720 px: the same links as a row under the masthead. */
+.tabs{display:flex;background:var(--canvas)}
+.tabs a{flex:1 1 0;min-width:0;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-family:var(--display);font-weight:600;font-size:11.5px;letter-spacing:.01em;color:var(--muted)}
+.tabs a[hidden]{display:none}
+.tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabs a[aria-current="page"]{color:var(--ink)}
+.tabs a[aria-current="page"] svg{color:var(--accent);stroke-width:2.1}
+.tabs a:hover{color:var(--ink)}
+@media(max-width:719px){
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:40;border-top:1px solid var(--hair);
+    padding:4px max(8px,env(safe-area-inset-left,0px)) var(--dn-bot,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-right,0px))}
+  .has-tabs .wrap{padding-bottom:calc(72px + 57px + var(--dn-bot,env(safe-area-inset-bottom,0px)))}
+  /* iPhone home-screen app (8 Nov 2026, Alec's screenshot): iOS can leave the strip under a bar fixed
+     at the bottom unpainted, so a white band showed below the tabs in dark mode. The bar's own colour
+     carries on below it, off screen when there is nothing to fill. */
+  .tabs::after{content:"";position:absolute;left:0;right:0;top:100%;height:160px;background:var(--canvas);pointer-events:none}
+}
+@media(min-width:720px){
+  .tabs{justify-content:flex-start;gap:4px;border-bottom:1px solid var(--hair);padding:2px 0}
+  .tabs a{flex:none;flex-direction:row;gap:7px;min-height:44px;padding:0 12px;font-size:14px}
+  .tabs svg{width:20px;height:20px}
+}
+@media(max-width:719px){html:has(body.has-tabs){scroll-padding-bottom:64px}}
+
+/* Puzzle cards within the tile's height (7 Nov 2026, as the app's cards): the text column is
+   as tall as the tile, the headline, a two-line description, then the callout row on the
+   tile's foot: when on the left (faint), one thing on the right (How to play, or your
+   result once there is one, which hides How to play). 20 px above and below each card. */
+.puzzle-card .card{padding:20px 0}
+.puzzle-card .card>div{display:flex;flex-direction:column;min-height:96px}
+.puzzle-card .sf{-webkit-line-clamp:2;margin-top:4px}
+.puzzle-card .meta{margin-top:auto;padding-top:6px;padding-right:0;min-height:24px;flex-wrap:nowrap}
+.puzzle-card .card-result{margin-left:auto;white-space:nowrap}
+.card-guide{bottom:20px}
+.card-guide[hidden]{display:none}
+@media(min-width:560px){.puzzle-card .card>div{min-height:120px}}
+/* Puzzles: older cards stay in the page for crawlers but hidden (the day's set shows, 7 Nov 2026) */
+#feed > li[hidden]{display:none}
+
+/* side strips reach the page edge exactly, so they never widen it (--side-pad is minus the wrap's side padding) */
+.has-tabs{--side-pad:calc(-1 * max(16px,env(safe-area-inset-left,0px)))}
+@media(min-width:560px){.has-tabs{--side-pad:calc(-1 * max(20px,env(safe-area-inset-left,0px)))}}
+/* Frozen masthead on the puzzle pages (8 Nov 2026, Alec: as the app, where every tab keeps its header
+   while the content scrolls). It sticks under the status bar; a strip of page colour above it hides what
+   scrolls behind the notch. Leagues also freezes its pager, Archive its controls row (board.html,
+   archive.css), under the masthead: --mast-h is the masthead's height, kept by dn-nav.js. */
+.has-tabs .mast{position:sticky;top:var(--dn-top,env(safe-area-inset-top,0px));z-index:35;background:var(--canvas)}
+.has-tabs .mast::before{content:"";position:absolute;left:var(--side-pad);right:var(--side-pad);bottom:100%;
+  height:calc(var(--dn-top,env(safe-area-inset-top,0px)) + 2px);background:var(--canvas)}
+.has-tabs .mast::after{content:"";position:absolute;left:var(--side-pad);right:var(--side-pad);top:0;bottom:0;background:var(--canvas);z-index:-1}
+.has-tabs .pager,.has-tabs .ar-bar{position:sticky;top:calc(var(--dn-top,env(safe-area-inset-top,0px)) + var(--mast-h,64px));z-index:34;background:var(--canvas);
+  box-shadow:var(--side-pad) 0 0 var(--canvas),calc(-1 * var(--side-pad)) 0 0 var(--canvas)}
+.has-tabs .pager{padding-bottom:6px}
+.has-tabs .ar-bar{padding:6px 0}
+
+/* From the Lab (17 Nov 2026, Alec: the app's Today panel on the website): the running trials as
+   compact rows in the Lab pink, under the day's set on Puzzles. */
+.labpanel{margin:24px 0 8px;padding:16px 16px 6px;border-radius:18px;background:var(--lab-soft)}
+.labpanel[hidden]{display:none}
+.lp-h{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;font-size:17px;letter-spacing:-.01em;color:var(--ink);margin:0}
+.lp-mark{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:7px;background:var(--lab);color:#fff}
+.lp-line{font-size:13px;line-height:1.4;color:var(--muted);margin:6px 0 4px}
+.lp-rows{list-style:none;margin:0;padding:0}
+.lp-rows>li+li{border-top:1px solid color-mix(in srgb,var(--lab) 22%,transparent)}
+.lp-row{display:flex;align-items:center;gap:12px;min-height:44px;padding:10px 0;color:inherit;text-decoration:none}
+.lp-tile{width:48px;height:48px;border-radius:8px;flex:none;display:block}
+.lp-body{flex:1;min-width:0;display:flex;flex-direction:column}
+.lp-name{font-weight:700;font-size:15px;color:var(--ink)}
+.lp-desc{font-size:12.5px;line-height:1.35;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lp-call{font-weight:700;font-size:13px;color:var(--lab);white-space:nowrap}
+.lp-call.done{color:var(--puzzles)}
+.lp-chev{color:var(--lab);display:inline-flex}
+.lp-row:hover .lp-name{text-decoration:underline}
