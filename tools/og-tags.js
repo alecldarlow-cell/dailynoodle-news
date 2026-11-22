@@ -26,7 +26,7 @@ const path = require('path');
 
 const ORIGIN = 'https://news.dailynoodle.co.uk';
 const IMAGE = ORIGIN + '/assets/share-card.png';
-const IMAGE_ALT = 'The Daily Noodle: news, puzzles and games';
+const IMAGE_ALT = 'Noodle News: the news, explained';
 const SITE = 'The Daily Noodle';
 const DIRS = ['reports'];
 const DRY = process.env.DN_OG_DRY === '1';
